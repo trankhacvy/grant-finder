@@ -75,7 +75,7 @@
     @apply border-border;
   }
   body {
-    @apply min-h-screen font-sans antialiased bg-background text-foreground;
+    @apply min-h-screen antialiased bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }

@@ -122,7 +122,12 @@ export function SearchDialog() {
         </kbd>{" "}
       </button>
 
-      <Dialog open={open}>
+      <Dialog
+        open={open}
+        onOpenChange={(open) => {
+          setOpen(open)
+        }}
+      >
         <DialogContent className="sm:max-w-xl text-black">
           <DialogHeader>
             <DialogTitle>OpenAI powered grants search</DialogTitle>
