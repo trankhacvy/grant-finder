@@ -28,6 +28,7 @@ export function SearchDialog() {
   const [answer, setAnswer] = useState<string | undefined>("")
   const [isLoading, setIsLoading] = useState(false)
   const [hasError, setHasError] = useState(false)
+  const [sources, setSources] = useState([])
 
   function handleModalToggle() {
     setOpen(!open)
@@ -63,9 +64,31 @@ export function SearchDialog() {
         onmessage(event) {
           setIsLoading(false)
 
-          if (event.data !== "" && event.data !== "CLOSE") {
+          if (
+            event.data !== "" &&
+            !event.data.startsWith('{"text"') &&
+            event.data !== "CLOSE"
+          ) {
             message += event.data
             setAnswer(message)
+          }
+
+          if (event.data !== "" && event.data.startsWith('{"text"')) {
+            try {
+              const json = JSON.parse(event.data)
+              if (
+                json.sourceDocuments &&
+                Array.isArray(json.sourceDocuments) &&
+                json.sourceDocuments.length > 0
+              ) {
+                setSources(
+                  json.sourceDocuments.map((item) => item.metadata.source)
+                )
+              }
+              console.log(json)
+            } catch (error) {
+              console.error(error)
+            }
           }
 
           if (event.data === "CLOSE") {
@@ -171,12 +194,30 @@ export function SearchDialog() {
               )}
 
               {answer && !hasError ? (
-                <div className="flex gap-4 dark:text-white">
-                  <span className="bg-green-500 p-2 w-8 h-8 rounded-full text-center flex items-center justify-center">
-                    <Wand width={18} className="text-white" />
-                  </span>
-                  {answer}
-                </div>
+                <>
+                  <div className="flex gap-4 dark:text-white">
+                    <span className="bg-green-500 p-2 w-8 h-8 rounded-full text-center flex items-center justify-center">
+                      <Wand width={18} className="text-white" />
+                    </span>
+                    {answer}
+                  </div>
+                  {sources.length > 0 && !isLoading && (
+                    <div className="mt-4">
+                      <p className="font-semibold mb-3 italic underline">
+                        Sources
+                      </p>
+                      {sources.map((item) => (
+                        <a
+                          className="block mb-2 text-sm hover:underline"
+                          href={item}
+                          target="_blank"
+                        >
+                          {item}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </>
               ) : null}
 
               <div className="relative">

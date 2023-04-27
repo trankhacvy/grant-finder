@@ -93,7 +93,7 @@ export async function POST(req) {
           handleNewToken(token)
         },
         handleLLMEnd: async () => {
-          handleTokenEnd()
+          // handleTokenEnd()
         },
         handleLLMError: async (error) => {
           handleTokenError(error)
@@ -105,9 +105,19 @@ export async function POST(req) {
       returnSourceDocuments: true,
     })
 
-    chain.call({
-      query: query,
-    })
+    chain
+      .call({
+        query: query,
+      })
+      .then(async (res) => {
+        await writer.ready
+        await writer.write(encoder.encode(`data: ${JSON.stringify(res)}\n\n`))
+        await writer.write(encoder.encode(`data: CLOSE\n\n`))
+        await writer.close()
+      })
+      .catch((error) => {
+        handleTokenError(error)
+      })
 
     return new NextResponse(responseStream.readable, {
       headers: {

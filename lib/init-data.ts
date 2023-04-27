@@ -40,7 +40,6 @@ const getAndStoreGrantInfo = async ($: cheerio.CheerioAPI) => {
     const cardInfo = await Promise.all(
       elements.map((ele) => getGrantCardInfo($, ele))
     )
-
     await supabaseClient.from("tbl_instagrants").insert(cardInfo)
   } catch (error) {
     console.error(error)
@@ -49,7 +48,11 @@ const getAndStoreGrantInfo = async ($: cheerio.CheerioAPI) => {
 
 const getGrantCardInfo = ($: cheerio.CheerioAPI, element: cheerio.Element) => {
   try {
-    const name = $(element).find(".notion-semantic-string > span").text()
+    const name = $(element)
+      .find(".notion-semantic-string > span")
+      .first()
+      .text()
+
     const status = $(element)
       .find(
         ".notion-collection-card__property-list .notion-collection-card__property"
