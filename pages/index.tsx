@@ -1,5 +1,4 @@
 import { createClient } from "@supabase/supabase-js"
-
 import { GrantItem } from "@/types/schema"
 import { GrantCard } from "@/components/grant-card"
 import { Layout } from "@/components/layout"
