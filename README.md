@@ -10,3 +10,6 @@ The AI-powered grants finder that enables builders to search for equity-free fun
 - Query the Postgres database for the most relevant documents related to the question.
 - Inject these documents as context for GPT-3.5 to reference in its answer.
 - Streaming the results back to the user in realtime.
+
+## Demo
+https://www.loom.com/share/c3f7c0953225433ca1058393757dab79
