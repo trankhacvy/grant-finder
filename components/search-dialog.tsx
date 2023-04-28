@@ -49,6 +49,7 @@ export function SearchDialog() {
     setSearch("")
     setHasError(false)
     setIsLoading(true)
+    setSources([])
 
     try {
       let message = ""
